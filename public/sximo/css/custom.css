@@ -1,0 +1,9 @@
+.page-facturacontroller-getindex .select2-drop{
+
+    min-width: 200px;
+
+}
+
+input[type=text] {
+    min-width: 55px !important;
+}
