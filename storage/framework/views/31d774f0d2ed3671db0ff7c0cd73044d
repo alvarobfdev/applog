@@ -311,7 +311,6 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                 <div class="cabFactura">
                     <div class="info info-numfac">
                         <div class="meta">Factura Nº</div>
-                        <div class="valueNumFac"><?php echo e($row->serfac); ?>/<?php echo e($row->ejefac); ?>/<?php echo e($row->numfac); ?></div>
                     </div>
                     <div class="numPag">Pág. <?php echo e($pagActual); ?>/<?php echo e($numPags); ?></div>
                     <div class="info info-fecha">

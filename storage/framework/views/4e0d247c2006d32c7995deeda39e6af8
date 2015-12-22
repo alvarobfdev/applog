@@ -8,7 +8,7 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
     <style>
         @font-face {
             font-family: LogivalFontLight;
-            src: url("{{url('/logival/fonts/MyriadPro-Light.otf')}}");
+            src: url("<?php echo e(url('/logival/fonts/MyriadPro-Light.otf')); ?>");
         }
         html, body {
             height:100%;
@@ -31,7 +31,7 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
 
 
 
-        @media print {
+        @media  print {
             body, page[size="A4"] {
                 background: white;
                 width: 21cm;
@@ -280,15 +280,15 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
 </head>
     <body>
         <?php $anotherPage = true; $pagActual=0; $numPags = ceil(count($subgrid['rowData'])/\App\Models\factura::LINES_PER_PAGE) ?>
-        @if($row->reducida)
+        <?php if($row->reducida): ?>
             <?php $numPags=1; ?>
-        @endif
-        @while($anotherPage)
+        <?php endif; ?>
+        <?php while($anotherPage): ?>
             <?php $anotherPage = false; $pagActual++;  ?>
         <page size="A4">
             <div class="cabecera">
                 <div class="logo">
-                    <img src="{{url("logival/img/logo-3.png")}}">
+                    <img src="<?php echo e(url("logival/img/logo-3.png")); ?>">
                     <div class="datosEmpresa">
                         <div class="linea"><span>CIF. B 96985519</span> | <span><strong>www.logival.es</strong></span> </div>
                         <div class="linea">Camí Faitanar N.3 · CP. 46210 Picanya. Valencia</div>
@@ -296,11 +296,11 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                     </div>
                 </div>
                 <div class="cab-logo">
-                    <img src="{{url("logival/img/cab-logo-2.png")}}">
+                    <img src="<?php echo e(url("logival/img/cab-logo-2.png")); ?>">
                     <div class="datosCliente">
-                        <div class="linea">Cód. Cliente: {{$row->codcli}}</div>
-                        <div class="linea"><strong>{{$row->nomcli}}</strong><br>NIF: {{$row->nif}}</div>
-                        <div class="linea">{{$row->domici}}<br>{{$row->codpos}} {{$row->poblac}} @if($row->provin), {{SiteHelpers::gridDisplayView($row->provin,'provin','1:paispro:provin:nombre')}} @endif @if($row->pais) ({{SiteHelpers::gridDisplayView($row->pais,'pais','1:paises:pais:nombre')}}) @endif</div>
+                        <div class="linea">Cód. Cliente: <?php echo e($row->codcli); ?></div>
+                        <div class="linea"><strong><?php echo e($row->nomcli); ?></strong><br>NIF: <?php echo e($row->nif); ?></div>
+                        <div class="linea"><?php echo e($row->domici); ?><br><?php echo e($row->codpos); ?> <?php echo e($row->poblac); ?> <?php if($row->provin): ?>, <?php echo e(SiteHelpers::gridDisplayView($row->provin,'provin','1:paispro:provin:nombre')); ?> <?php endif; ?> <?php if($row->pais): ?> (<?php echo e(SiteHelpers::gridDisplayView($row->pais,'pais','1:paises:pais:nombre')); ?>) <?php endif; ?></div>
                     </div>
 
                 </div>
@@ -311,11 +311,12 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                 <div class="cabFactura">
                     <div class="info info-numfac">
                         <div class="meta">Factura Nº</div>
+                        <div class="valueNumFac"><?php echo e($row->serfac); ?>/<?php echo e($row->ejefac); ?>/<?php echo e($row->numfac); ?></div>
                     </div>
-                    <div class="numPag">Pág. {{$pagActual}}/{{$numPags}}</div>
+                    <div class="numPag">Pág. <?php echo e($pagActual); ?>/<?php echo e($numPags); ?></div>
                     <div class="info info-fecha">
                         <div class="meta">Fecha de factura</div>
-                        <div class="valueFecha">{{\Carbon\Carbon::parse($row->fecfac)->format("d/m/Y")}}</div>
+                        <div class="valueFecha"><?php echo e(\Carbon\Carbon::parse($row->fecfac)->format("d/m/Y")); ?></div>
                     </div>
                     <div style="clear:both;"></div>
                 </div>
@@ -335,43 +336,43 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                         <tbody>
                         <?php $i = 0; ?>
 
-                        @if($row->reducida)
+                        <?php if($row->reducida): ?>
 
-                            @foreach($groups as $aplica=>$group)
+                            <?php foreach($groups as $aplica=>$group): ?>
                                 <tr>
                                     <td width="20%"></td>
-                                    <td width="40%">{{$group['descripcion']}}</td>
+                                    <td width="40%"><?php echo e($group['descripcion']); ?></td>
                                     <td width="10%"></td>
                                     <td width="10%"></td>
-                                    <td width="10%">{{number_format($group['importe'], 2, ',', '.')}}</td>
+                                    <td width="10%"><?php echo e(number_format($group['importe'], 2, ',', '.')); ?></td>
                                     <td width="10%"></td>
                                 </tr>
-                            @endforeach
-                        @endif
-                        @foreach ($subgrid['rowData'] as $index=>$rowLinea)
-                            @if(!$row->reducida || ($row->reducida && !array_key_exists(
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        <?php foreach($subgrid['rowData'] as $index=>$rowLinea): ?>
+                            <?php if(!$row->reducida || ($row->reducida && !array_key_exists(
                                 $rowLinea->aplica,
                                 \App\Http\Controllers\FacturaController::$GROUPS_DESCRIPTIONS)
                                 )
-                            )
+                            ): ?>
 
                                 <tr>
-                                    <td width="20%">{{\Carbon\Carbon::parse($rowLinea->feccal)->format("d/m/Y")}}</td>
-                                    <td width="40%">{{$rowLinea->descri}}</td>
-                                    <td width="10%">{{number_format($rowLinea->unitas, 2, ',', '.')}}</td>
-                                    <td width="10%">{{$rowLinea->bastar}}</td>
-                                    <td width="10%">{{number_format($rowLinea->import, 2, ',', '.')}}</td>
-                                    <td width="10%">{{number_format($rowLinea->seguro, 2, ',', '.')}}</td>
+                                    <td width="20%"><?php echo e(\Carbon\Carbon::parse($rowLinea->feccal)->format("d/m/Y")); ?></td>
+                                    <td width="40%"><?php echo e($rowLinea->descri); ?></td>
+                                    <td width="10%"><?php echo e(number_format($rowLinea->unitas, 2, ',', '.')); ?></td>
+                                    <td width="10%"><?php echo e($rowLinea->bastar); ?></td>
+                                    <td width="10%"><?php echo e(number_format($rowLinea->import, 2, ',', '.')); ?></td>
+                                    <td width="10%"><?php echo e(number_format($rowLinea->seguro, 2, ',', '.')); ?></td>
                                 </tr>
                                 <?php $i++; unset($subgrid['rowData'][$index]);?>
-                                    @if($i==\App\Models\factura::LINES_PER_PAGE)
-                                        @if(count($subgrid['rowData'])>0)
+                                    <?php if($i==\App\Models\factura::LINES_PER_PAGE): ?>
+                                        <?php if(count($subgrid['rowData'])>0): ?>
                                             <?php $anotherPage = true; ?>
-                                        @endif
+                                        <?php endif; ?>
                                         <?php break;?>
-                                    @endif
-                            @endif
-                        @endforeach
+                                    <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
 
                         </tbody>
                     </table>
@@ -386,22 +387,22 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                     <div class="cajaTotal cuotaIVA">Cuota I.V.A</div>
                     <div class="cajaTotal totaFactura">Total Factura</div>
                     <div style="clear:both;"></div>
-                    <div class="cajaTotal cajaValor totalBruto">@if(!$anotherPage){{number_format($row->impbru, 2, ',', '.')}}€@endif</div>
-                    <div class="cajaTotal cajaValor descuento">@if(!$anotherPage){{$row->dtofac}}%@endif</div>
-                    <div class="cajaTotal cajaValor importeDescuento">@if(!$anotherPage){{number_format($row->impdfac, 2, ',', '.')}}€@endif</div>
-                    <div class="cajaTotal cajaValor baseImponible">@if(!$anotherPage){{number_format($row->basiva, 2, ',', '.')}}€@endif</div>
-                    <div class="cajaTotal cajaValor porcIVA">@if(!$anotherPage){{$row->tipiva}}%@endif</div>
-                    <div class="cajaTotal cajaValor cuotaIVA">@if(!$anotherPage){{number_format($row->impiva, 2, ',', '.')}}€@endif</div>
-                    <div class="cajaTotal cajaValor totaFactura">@if(!$anotherPage){{number_format($row->totfac, 2, ',', '.')}}€@endif</div>
+                    <div class="cajaTotal cajaValor totalBruto"><?php if(!$anotherPage): ?><?php echo e(number_format($row->impbru, 2, ',', '.')); ?>€<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor descuento"><?php if(!$anotherPage): ?><?php echo e($row->dtofac); ?>%<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor importeDescuento"><?php if(!$anotherPage): ?><?php echo e(number_format($row->impdfac, 2, ',', '.')); ?>€<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor baseImponible"><?php if(!$anotherPage): ?><?php echo e(number_format($row->basiva, 2, ',', '.')); ?>€<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor porcIVA"><?php if(!$anotherPage): ?><?php echo e($row->tipiva); ?>%<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor cuotaIVA"><?php if(!$anotherPage): ?><?php echo e(number_format($row->impiva, 2, ',', '.')); ?>€<?php endif; ?></div>
+                    <div class="cajaTotal cajaValor totaFactura"><?php if(!$anotherPage): ?><?php echo e(number_format($row->totfac, 2, ',', '.')); ?>€<?php endif; ?></div>
                     <div style="clear:both;"></div>
 
                 </div>
-                <div class="cajaFormaPago">Forma de pago</div> <div class="formaTransferencia">{{SiteHelpers::gridDisplayView($row->forpag,'forpag','1:forpagos:forpag:descri')}}</div>
+                <div class="cajaFormaPago">Forma de pago</div> <div class="formaTransferencia"><?php echo e(SiteHelpers::gridDisplayView($row->forpag,'forpag','1:forpagos:forpag:descri')); ?></div>
             </div>
             <div class="footer">Insc. en el Reg. Merc. de Valencia. Tomo 6635, Libro 3939, de la sección 8º de sociedades, folio31, hoja nº.V. 72021,
             Inscripción, 1º, de fecha 6 de junio de 2000
             </div>
         </page>
-        @endwhile
+        <?php endwhile; ?>
     </body>
 </html>

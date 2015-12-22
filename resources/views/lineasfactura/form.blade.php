@@ -32,52 +32,7 @@
 						<fieldset><legend> Líneas Factura</legend>
 									
 								  <div class="form-group  " >
-									<label for="Codemp" class=" control-label col-md-4 text-left"> Codemp </label>
-									<div class="col-md-6">
-									  {!! Form::text('codemp', $row['codemp'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Cenfac" class=" control-label col-md-4 text-left"> Cenfac </label>
-									<div class="col-md-6">
-									  {!! Form::text('cenfac', $row['cenfac'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Serfac" class=" control-label col-md-4 text-left"> Serfac </label>
-									<div class="col-md-6">
-									  {!! Form::text('serfac', $row['serfac'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Ejefac" class=" control-label col-md-4 text-left"> Ejefac </label>
-									<div class="col-md-6">
-									  {!! Form::text('ejefac', $row['ejefac'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Numfac" class=" control-label col-md-4 text-left"> Numfac </label>
-									<div class="col-md-6">
-									  {!! Form::text('numfac', $row['numfac'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Aplica" class=" control-label col-md-4 text-left"> Aplica </label>
+									<label for="Servicio" class=" control-label col-md-4 text-left"> Servicio </label>
 									<div class="col-md-6">
 									  {!! Form::text('aplica', $row['aplica'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -86,7 +41,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Numlin" class=" control-label col-md-4 text-left"> Numlin </label>
+									<label for="Núm. Línea" class=" control-label col-md-4 text-left"> Núm. Línea </label>
 									<div class="col-md-6">
 									  {!! Form::text('numlin', $row['numlin'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -95,7 +50,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Feccal" class=" control-label col-md-4 text-left"> Feccal </label>
+									<label for="Fecha calculo" class=" control-label col-md-4 text-left"> Fecha calculo </label>
 									<div class="col-md-6">
 									  {!! Form::text('feccal', $row['feccal'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -104,7 +59,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Descri" class=" control-label col-md-4 text-left"> Descri </label>
+									<label for="Descripcion" class=" control-label col-md-4 text-left"> Descripcion </label>
 									<div class="col-md-6">
 									  {!! Form::text('descri', $row['descri'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -113,7 +68,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Bastar" class=" control-label col-md-4 text-left"> Bastar </label>
+									<label for="Base Aplicación" class=" control-label col-md-4 text-left"> Base Aplicación </label>
 									<div class="col-md-6">
 									  {!! Form::text('bastar', $row['bastar'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -122,7 +77,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Unitas" class=" control-label col-md-4 text-left"> Unitas </label>
+									<label for="Unidades para tasacion" class=" control-label col-md-4 text-left"> Unidades para tasacion </label>
 									<div class="col-md-6">
 									  {!! Form::text('unitas', $row['unitas'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -131,7 +86,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Import" class=" control-label col-md-4 text-left"> Import </label>
+									<label for="Importe sujeto a IVA" class=" control-label col-md-4 text-left"> Importe sujeto a IVA </label>
 									<div class="col-md-6">
 									  {!! Form::text('import', $row['import'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -140,7 +95,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Docref" class=" control-label col-md-4 text-left"> Docref </label>
+									<label for="Documento referencia" class=" control-label col-md-4 text-left"> Documento referencia </label>
 									<div class="col-md-6">
 									  {!! Form::text('docref', $row['docref'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -149,7 +104,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Perseg" class=" control-label col-md-4 text-left"> Perseg </label>
+									<label for="Porc. Seguro" class=" control-label col-md-4 text-left"> Porc. Seguro </label>
 									<div class="col-md-6">
 									  {!! Form::text('perseg', $row['perseg'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -167,7 +122,7 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Tipalb" class=" control-label col-md-4 text-left"> Tipalb </label>
+									<label for="Tipo Albaran (E/S)" class=" control-label col-md-4 text-left"> Tipo Albaran (E/S) </label>
 									<div class="col-md-6">
 									  {!! Form::text('tipalb', $row['tipalb'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
@@ -176,18 +131,9 @@
 									 </div>
 								  </div> 					
 								  <div class="form-group  " >
-									<label for="Txtadi" class=" control-label col-md-4 text-left"> Txtadi </label>
+									<label for="Texto adicional" class=" control-label col-md-4 text-left"> Texto adicional </label>
 									<div class="col-md-6">
 									  {!! Form::text('txtadi', $row['txtadi'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
-									 </div> 
-									 <div class="col-md-2">
-									 	
-									 </div>
-								  </div> 					
-								  <div class="form-group  " >
-									<label for="Cabfactu Id" class=" control-label col-md-4 text-left"> Cabfactu Id </label>
-									<div class="col-md-6">
-									  {!! Form::text('cabfactu_id', $row['cabfactu_id'],array('class'=>'form-control', 'placeholder'=>'',   )) !!} 
 									 </div> 
 									 <div class="col-md-2">
 									 	

@@ -30,25 +30,25 @@
 			<tbody>	
 		
 					<tr>
-						<td width='30%' class='label-view text-right'>Ejefac</td>
+						<td width='30%' class='label-view text-right'>Ejercicio</td>
 						<td>{{ $row->ejefac }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Numfac</td>
+						<td width='30%' class='label-view text-right'>Núm. Factura</td>
 						<td>{{ $row->numfac }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Fecfac</td>
+						<td width='30%' class='label-view text-right'>Fecha</td>
 						<td>{{ $row->fecfac }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Codcli</td>
+						<td width='30%' class='label-view text-right'>Cliente</td>
 						<td>{!! SiteHelpers::gridDisplayView($row->codcli,'codcli','1:clientes:codcli:nomcli') !!} </td>
 						
 					</tr>
@@ -60,56 +60,50 @@
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Domici</td>
+						<td width='30%' class='label-view text-right'>Domicilio</td>
 						<td>{{ $row->domici }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Poblac</td>
+						<td width='30%' class='label-view text-right'>Población</td>
 						<td>{{ $row->poblac }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Codpos</td>
+						<td width='30%' class='label-view text-right'>Cód. Postal</td>
 						<td>{{ $row->codpos }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Pais</td>
+						<td width='30%' class='label-view text-right'>País</td>
 						<td>{!! SiteHelpers::gridDisplayView($row->pais,'pais','1:paises:pais:nombre') !!} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Provin</td>
+						<td width='30%' class='label-view text-right'>Provincia</td>
 						<td>{!! SiteHelpers::gridDisplayView($row->provin,'provin','1:paispro:provin:nombre') !!} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Totfac</td>
+						<td width='30%' class='label-view text-right'>Total</td>
 						<td>{{ $row->totfac }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Forpag</td>
+						<td width='30%' class='label-view text-right'>Forma Pago</td>
 						<td>{!! SiteHelpers::gridDisplayView($row->forpag,'forpag','1:forpagos:forpag:descri') !!} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Reducida</td>
+						<td width='30%' class='label-view text-right'>Tipo factura</td>
 						<td>{{ $row->reducida }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Id</td>
-						<td>{{ $row->id }} </td>
 						
 					</tr>
 				

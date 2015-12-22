@@ -31,17 +31,17 @@
 	<div class="sbox-content"> 	
 	    <div class="toolbar-line ">
 			@if($access['is_add'] ==1)
-	   		<a href="{{ URL::to('factura/update') }}" class="tips btn btn-sm btn-white"  title="{{ Lang::get('core.btn_create') }}">
-			<i class="fa fa-plus-circle "></i>&nbsp;{{ Lang::get('core.btn_create') }}</a>
+	   		<a href="{{ URL::to('factura/update') }}" class="tips btn btn-sm btn-white"  title="Crear">
+			<i class="fa fa-plus-circle "></i>&nbsp;Crear</a>
 			@endif  
 			@if($access['is_remove'] ==1)
-			<a href="javascript://ajax"  onclick="SximoDelete();" class="tips btn btn-sm btn-white" title="{{ Lang::get('core.btn_remove') }}">
-			<i class="fa fa-minus-circle "></i>&nbsp;{{ Lang::get('core.btn_remove') }}</a>
+			<a href="javascript://ajax"  onclick="SximoDelete();" class="tips btn btn-sm btn-white" title="Eliminar">
+			<i class="fa fa-minus-circle "></i>&nbsp;Eliminar</a>
 			@endif 
-			<a href="{{ URL::to( 'factura/search') }}" class="btn btn-sm btn-white" onclick="SximoModal(this.href,'Advance Search'); return false;" ><i class="fa fa-search"></i> Search</a>				
+			<a href="{{ URL::to( 'factura/search') }}" class="btn btn-sm btn-white" onclick="SximoModal(this.href,'Advance Search'); return false;" ><i class="fa fa-search"></i>Búsqueda avanzada</a>
 			@if($access['is_excel'] ==1)
-			<a href="{{ URL::to('factura/download?return='.$return) }}" class="tips btn btn-sm btn-white" title="{{ Lang::get('core.btn_download') }}">
-			<i class="fa fa-download"></i>&nbsp;{{ Lang::get('core.btn_download') }} </a>
+			<a href="{{ URL::to('factura/download?return='.$return) }}" class="tips btn btn-sm btn-white" title="Exportar a Excel">
+			<i class="fa fa-download"></i>&nbsp;Exportar a Excel </a>
 			@endif
 			<a href="javascript://ajax" onclick="exportarPDF();" class="tips btn btn-sm btn-white" title="Generar facturas (PDF)">
 			<i class="fa fa-file-pdf-o"></i>&nbsp; Generar facturas (PDF) </a>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\controller;
 use App\Models\Factura;
+use Carbon\Carbon;
 use Chumper\Zipper\Zipper;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
@@ -119,7 +120,11 @@ class FacturaController extends Controller {
 		{
 			$this->data['row'] =  $row;
 		} else {
-			$this->data['row'] = $this->model->getColumnTable('cabfactu'); 
+			$this->data['row'] = $this->model->getColumnTable('cabfactu');
+
+			$this->data['row']['numfac'] = $this->model->getNextNumFac(Carbon::now()->year);
+			$this->data['row']['ejefac'] = Carbon::now()->year;
+			$this->data['row']['fecfac'] = Carbon::now()->toDateString();
 		}
 		$this->data['fields'] 		=  \SiteHelpers::fieldLang($this->info['config']['forms']);
 		$this->data['subgrid'] = $this->detailview($this->modelview ,  $this->data['subgrid'] ,$id );
@@ -138,7 +143,7 @@ class FacturaController extends Controller {
 		{
 			$this->data['row'] =  $row;
 		} else {
-			$this->data['row'] = $this->model->getColumnTable('cabfactu'); 
+			$this->data['row'] = $this->model->getColumnTable('cabfactu');
 		}
 		$this->data['fields'] 		=  \SiteHelpers::fieldLang($this->info['config']['grid']);
 		$this->data['subgrid'] = $this->detailview($this->modelview ,  $this->data['subgrid'] ,$id );
@@ -246,13 +251,17 @@ class FacturaController extends Controller {
 		$view = $this->getHtmlContent($id);
 		$nombreFact = "factura-{$this->data['row']->serfac}-{$this->data['row']->ejefac}-{$this->data['row']->numfac}.pdf";
 		return \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->download($nombreFact);
-
-
 	}
 
 	public function getPdfView(Request $request, $id) {
 		$view = $this->getHtmlContent($id);
-		return $view;
+		$nombreFact = "factura-{$this->data['row']->serfac}-{$this->data['row']->ejefac}-{$this->data['row']->numfac}.pdf";
+		$output =  \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
+
+		return Response::make($output, 200, [
+				'Content-Type' => 'application/pdf',
+				'Content-Disposition' => 'inline; '.$nombreFact,
+		]);
 	}
 
 	/**

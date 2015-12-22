@@ -28,6 +28,11 @@ class factura extends Sximo  {
 	public static function queryGroup(){
 		return "  ";
 	}
+
+	public function getNextNumFac($ejercicio) {
+		$numFac = \DB::table($this->table)->where("ejefac", $ejercicio)->max("numfac");
+		return $numFac+1;
+	}
 	
 
 }

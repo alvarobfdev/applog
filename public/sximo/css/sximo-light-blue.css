@@ -289,7 +289,7 @@ body.minimize-sidemenu .navbar-default .nav > li > .nav-second-level li a {
   padding: 18px 0;
 }
 .logo-header {
-	background:#2d5f8b; height:60px;
+	background:#4D8CC7; height:60px;
 }
 .logo-header a:hover { background: none !important;}
 .sxim-init .navbar-static-side,
@@ -417,7 +417,7 @@ fieldset[disabled] .btn-primary:hover,
 fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
-  background-color: ##45b6af;
+  background-color: #45b6af;
   border-color: #1dc5a3;
 }
 .btn-success {
@@ -2043,7 +2043,7 @@ fieldset legend { font-size:16px; padding:10px 0; font-weight:500;}
 .page-content-wrapper { padding:0 15px;}
 .ribon-sximo { margin:20px 0;}
 
-.panel { background:none !important;; border-color:none !important;}
+.panel { background:none !important;; border-color: transparent !important;}
 .panel.panel-default { background:none !important;; border-color:#eee !important;}
 
 /* Back to to */

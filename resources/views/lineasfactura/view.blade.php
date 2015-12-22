@@ -30,85 +30,55 @@
 			<tbody>	
 		
 					<tr>
-						<td width='30%' class='label-view text-right'>Codemp</td>
-						<td>{{ $row->codemp }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Cenfac</td>
-						<td>{{ $row->cenfac }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Serfac</td>
-						<td>{{ $row->serfac }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Ejefac</td>
-						<td>{{ $row->ejefac }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Numfac</td>
-						<td>{{ $row->numfac }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Aplica</td>
+						<td width='30%' class='label-view text-right'>Servicio</td>
 						<td>{{ $row->aplica }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Numlin</td>
+						<td width='30%' class='label-view text-right'>Núm. Línea</td>
 						<td>{{ $row->numlin }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Feccal</td>
+						<td width='30%' class='label-view text-right'>Fecha calculo</td>
 						<td>{{ $row->feccal }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Descri</td>
+						<td width='30%' class='label-view text-right'>Descripción</td>
 						<td>{{ $row->descri }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Bastar</td>
+						<td width='30%' class='label-view text-right'>Base Aplicación</td>
 						<td>{{ $row->bastar }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Unitas</td>
+						<td width='30%' class='label-view text-right'>Unidades para tasacion</td>
 						<td>{{ $row->unitas }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Import</td>
+						<td width='30%' class='label-view text-right'>Importe sujeto a IVA</td>
 						<td>{{ $row->import }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Docref</td>
+						<td width='30%' class='label-view text-right'>Documento referencia</td>
 						<td>{{ $row->docref }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Perseg</td>
+						<td width='30%' class='label-view text-right'>Porc. Seguro</td>
 						<td>{{ $row->perseg }} </td>
 						
 					</tr>
@@ -120,26 +90,14 @@
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Tipalb</td>
+						<td width='30%' class='label-view text-right'>Tipo Albaran (E/S)</td>
 						<td>{{ $row->tipalb }} </td>
 						
 					</tr>
 				
 					<tr>
-						<td width='30%' class='label-view text-right'>Txtadi</td>
+						<td width='30%' class='label-view text-right'>Texto adicional</td>
 						<td>{{ $row->txtadi }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Cabfactu Id</td>
-						<td>{{ $row->cabfactu_id }} </td>
-						
-					</tr>
-				
-					<tr>
-						<td width='30%' class='label-view text-right'>Id</td>
-						<td>{{ $row->id }} </td>
 						
 					</tr>
 				
