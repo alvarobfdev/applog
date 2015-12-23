@@ -4,7 +4,8 @@ use App\Http\Controllers\controller;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Validator, Input, Redirect ; 
+use Khill\Lavacharts\Laravel\LavachartsFacade;
+use Validator, Input, Redirect ;
 
 
 class ClienteController extends Controller {
@@ -16,7 +17,6 @@ class ClienteController extends Controller {
 
 	public function __construct()
 	{
-		
 		$this->beforeFilter('csrf', array('on'=>'post'));
 		$this->model = new Cliente();
 		

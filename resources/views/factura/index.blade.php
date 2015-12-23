@@ -52,6 +52,7 @@
 	
 	 {!! Form::open(array('url'=>'factura/delete/', 'class'=>'form-horizontal' ,'id' =>'SximoTable' )) !!}
 	 <div class="table-responsive" style="min-height:300px;">
+		 {!!\Lava::render('LineChart', 'myFancyChart', 'myStocks', array('height'=>300, 'width'=>600))!!}
     <table class="table table-striped ">
         <thead>
 			<tr>

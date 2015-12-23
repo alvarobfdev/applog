@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Chumper\Zipper\Zipper;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use Khill\Lavacharts\Formats\DateFormat;
+use Khill\Lavacharts\Formats\Format;
 use Symfony\Component\HttpFoundation\Response;
 use Validator, Input, Redirect ;
 
@@ -24,7 +26,8 @@ class FacturaController extends Controller {
 
 	public function __construct()
 	{
-		
+
+
 		$this->beforeFilter('csrf', array('on'=>'post'));
 		$this->model = new Factura();
 		$this->modelview = new  \App\Models\Lineasfactura();
@@ -44,7 +47,10 @@ class FacturaController extends Controller {
 	public function getIndex( Request $request )
 	{
 
-		if($this->access['is_view'] ==0) 
+
+
+
+		if($this->access['is_view'] ==0)
 			return Redirect::to('dashboard')
 				->with('messagetext', \Lang::get('core.note_restric'))->with('msgstatus','error');
 
@@ -53,6 +59,7 @@ class FacturaController extends Controller {
 		// End Filter sort and order for query 
 		// Filter Search for query		
 		$filter = (!is_null($request->input('search')) ? $this->buildSearch() : '');
+		$this->createCharts($filter);
 
 		
 		$page = $request->input('page', 1);
@@ -121,7 +128,6 @@ class FacturaController extends Controller {
 			$this->data['row'] =  $row;
 		} else {
 			$this->data['row'] = $this->model->getColumnTable('cabfactu');
-
 			$this->data['row']['numfac'] = $this->model->getNextNumFac(Carbon::now()->year);
 			$this->data['row']['ejefac'] = Carbon::now()->year;
 			$this->data['row']['fecfac'] = Carbon::now()->toDateString();
@@ -311,5 +317,54 @@ class FacturaController extends Controller {
 		}
 
 		return $groups;
+	}
+
+	public function createCharts($filter = null)
+	{
+
+		$stocksTable = \Lava::DataTable();
+		$format = new DateFormat();
+
+		$stocksTable->addDateColumn('Day of Month', $format->pattern("MMMM"))
+				->addNumberColumn('2015')
+				->addNumberColumn('2014');
+
+		// Random Data For Example
+		for ($a = 1; $a <= 12; $a++) {
+
+			$firstDayOfMonth = Carbon::createFromDate(2015, $a, 1)->toDateString();
+			$lastDay = date("t", Carbon::createFromDate(2015, $a, 1)->timestamp);
+			$lastDayOfMonth = Carbon::createFromDate(2015, $a, $lastDay)->toDateString();
+
+			$filter2015 = $filter . "AND fecfac >= '$firstDayOfMonth' AND fecfac <= '$lastDayOfMonth'";
+
+			$rows = $this->model->getRows(["params" => $filter2015]);
+			$priceMonth2015 = 0;
+			foreach($rows['rows'] as $row) {
+				$priceMonth2015 += $row->totfac;
+			}
+
+			$firstDayOfMonth = Carbon::createFromDate(2014, $a, 1)->toDateString();
+			$lastDay = date("t", Carbon::createFromDate(2014, $a, 1)->timestamp);
+			$lastDayOfMonth = Carbon::createFromDate(2014, $a, $lastDay)->toDateString();
+
+			$filter2014 = $filter . "AND fecfac >= '$firstDayOfMonth' AND fecfac <= '$lastDayOfMonth'";
+
+			$rows = $this->model->getRows(["params" => $filter2014]);
+
+			$priceMonth2014 = 0;
+			foreach($rows['rows'] as $row) {
+				$priceMonth2014 += $row->totfac;
+			}
+
+			$rowData = array(
+					"2015-$a-1", $priceMonth2015, $priceMonth2014
+			);
+
+			$stocksTable->addRow($rowData);
+		}
+
+		$chart = \Lava::LineChart('myFancyChart');
+		$chart->datatable($stocksTable);
 	}
 }

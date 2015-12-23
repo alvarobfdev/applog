@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.1.26 (LTS) on 2015-12-03.
+ * Generated for Laravel 5.1.27 (LTS) on 2015-12-22.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -2505,11 +2505,12 @@ namespace {
          *
          * @param string $path
          * @param string $domain
+         * @param bool $secure
          * @return $this 
          * @static 
          */
-        public static function setDefaultPathAndDomain($path, $domain){
-            return \Illuminate\Cookie\CookieJar::setDefaultPathAndDomain($path, $domain);
+        public static function setDefaultPathAndDomain($path, $domain, $secure = false){
+            return \Illuminate\Cookie\CookieJar::setDefaultPathAndDomain($path, $domain, $secure);
         }
         
         /**
@@ -4449,7 +4450,7 @@ namespace {
         /**
          * Determine if any rows exist for the current query.
          *
-         * @return bool|null 
+         * @return bool 
          * @static 
          */
         public static function exists(){
@@ -10678,16 +10679,6 @@ namespace {
         }
         
         /**
-         * Remove data that was flashed for only the current request.
-         *
-         * @return void 
-         * @static 
-         */
-        public static function removeFlashNowData(){
-            \Illuminate\Session\Store::removeFlashNowData();
-        }
-        
-        /**
          * Checks if an attribute is defined.
          *
          * @param string $name The attribute name
@@ -10869,14 +10860,14 @@ namespace {
         }
         
         /**
-         * Remove an item from the session.
+         * Remove one or many items from the session.
          *
-         * @param string $key
+         * @param string|array $keys
          * @return void 
          * @static 
          */
-        public static function forget($key){
-            \Illuminate\Session\Store::forget($key);
+        public static function forget($keys){
+            \Illuminate\Session\Store::forget($keys);
         }
         
         /**
@@ -13251,6 +13242,312 @@ namespace {
         public static function stream($filename = 'document.pdf'){
             return \Barryvdh\Snappy\PdfWrapper::stream($filename);
         }
+        
+    }
+
+
+    class Zipper extends \Chumper\Zipper\Facades\Zipper{
+        
+        /**
+         * Create a new zip Archive if the file does not exists
+         * opens a zip archive if the file exists
+         *
+         * @param $pathToFile string The file to open
+         * @param \Chumper\Zipper\RepositoryInterface|string $type The type of the archive, defaults to zip, possible are zip, phar
+         * @return $this Zipper instance
+         * @static 
+         */
+        public static function make($pathToFile, $type = 'zip'){
+            return \Chumper\Zipper\Zipper::make($pathToFile, $type);
+        }
+        
+        /**
+         * Create a new zip archive or open an existing one
+         *
+         * @param $pathToFile
+         * @return $this 
+         * @static 
+         */
+        public static function zip($pathToFile){
+            return \Chumper\Zipper\Zipper::zip($pathToFile);
+        }
+        
+        /**
+         * Create a new phar file or open one
+         *
+         * @param $pathToFile
+         * @return $this 
+         * @static 
+         */
+        public static function phar($pathToFile){
+            return \Chumper\Zipper\Zipper::phar($pathToFile);
+        }
+        
+        /**
+         * Extracts the opened zip archive to the specified location <br/>
+         * you can provide an array of files and folders and define if they should be a white list
+         * or a black list to extract.
+         *
+         * @param $path string The path to extract to
+         * @param array $files An array of files
+         * @param int $method The Method the files should be treated
+         * @static 
+         */
+        public static function extractTo($path, $files = array(), $method = 2){
+            return \Chumper\Zipper\Zipper::extractTo($path, $files, $method);
+        }
+        
+        /**
+         * Gets the content of a single file if available
+         *
+         * @param $filePath string The full path (including all folders) of the file in the zip
+         * @throws \Exception
+         * @return mixed returns the content or throws an exception
+         * @static 
+         */
+        public static function getFileContent($filePath){
+            return \Chumper\Zipper\Zipper::getFileContent($filePath);
+        }
+        
+        /**
+         * Add one or multiple files to the zip.
+         *
+         * @param $pathToAdd array|string An array or string of files and folders to add
+         * @return $this Zipper instance
+         * @static 
+         */
+        public static function add($pathToAdd){
+            return \Chumper\Zipper\Zipper::add($pathToAdd);
+        }
+        
+        /**
+         * Add a file to the zip using its contents
+         *
+         * @param $filename string The name of the file to create
+         * @param $content string The file contents
+         * @return $this Zipper instance
+         * @static 
+         */
+        public static function addString($filename, $content){
+            return \Chumper\Zipper\Zipper::addString($filename, $content);
+        }
+        
+        /**
+         * Gets the status of the zip.
+         *
+         * @return integer The status of the internal zip file
+         * @static 
+         */
+        public static function getStatus(){
+            return \Chumper\Zipper\Zipper::getStatus();
+        }
+        
+        /**
+         * Remove a file or array of files and folders from the zip archive
+         *
+         * @param $fileToRemove array|string The path/array to the files in the zip
+         * @return $this Zipper instance
+         * @static 
+         */
+        public static function remove($fileToRemove){
+            return \Chumper\Zipper\Zipper::remove($fileToRemove);
+        }
+        
+        /**
+         * Returns the path of the current zip file if there is one.
+         *
+         * @return string The path to the file
+         * @static 
+         */
+        public static function getFilePath(){
+            return \Chumper\Zipper\Zipper::getFilePath();
+        }
+        
+        /**
+         * Closes the zip file and frees all handles
+         *
+         * @static 
+         */
+        public static function close(){
+            return \Chumper\Zipper\Zipper::close();
+        }
+        
+        /**
+         * Sets the internal folder to the given path.<br/>
+         * Useful for extracting only a segment of a zip file.
+         *
+         * @param $path
+         * @return $this 
+         * @static 
+         */
+        public static function folder($path){
+            return \Chumper\Zipper\Zipper::folder($path);
+        }
+        
+        /**
+         * Resets the internal folder to the root of the zip file.
+         *
+         * @return $this 
+         * @static 
+         */
+        public static function home(){
+            return \Chumper\Zipper\Zipper::home();
+        }
+        
+        /**
+         * Deletes the archive file
+         *
+         * @static 
+         */
+        public static function delete(){
+            return \Chumper\Zipper\Zipper::delete();
+        }
+        
+        /**
+         * Get the type of the Archive
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getArchiveType(){
+            return \Chumper\Zipper\Zipper::getArchiveType();
+        }
+        
+        /**
+         * Get the current internal folder pointer
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getCurrentFolderPath(){
+            return \Chumper\Zipper\Zipper::getCurrentFolderPath();
+        }
+        
+        /**
+         * Checks if a file is present in the archive
+         *
+         * @param $fileInArchive
+         * @return bool 
+         * @static 
+         */
+        public static function contains($fileInArchive){
+            return \Chumper\Zipper\Zipper::contains($fileInArchive);
+        }
+        
+        /**
+         * 
+         *
+         * @return \Chumper\Zipper\RepositoryInterface 
+         * @static 
+         */
+        public static function getRepository(){
+            return \Chumper\Zipper\Zipper::getRepository();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Chumper\Zipper\Filesystem 
+         * @static 
+         */
+        public static function getFileHandler(){
+            return \Chumper\Zipper\Zipper::getFileHandler();
+        }
+        
+        /**
+         * Gets the path to the internal folder
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getInternalPath(){
+            return \Chumper\Zipper\Zipper::getInternalPath();
+        }
+        
+        /**
+         * List files that are within the archive
+         *
+         * @return array 
+         * @static 
+         */
+        public static function listFiles(){
+            return \Chumper\Zipper\Zipper::listFiles();
+        }
+        
+    }
+
+
+    class Lava extends \Khill\Lavacharts\Laravel\LavachartsFacade{
+        
+        /**
+         * Renders the chart into the page
+         * 
+         * Given a chart label and an HTML element id, this will output
+         * all of the necessary javascript to generate the chart.
+         *
+         * @access public
+         * @since v2.0.0
+         * @param string $chartType Type of chart to render.
+         * @param string $chartLabel Label of a saved chart.
+         * @param string $elementId HTML element id to render the chart into.
+         * @param mixed $divDimensions Set true for div creation, or pass an array with height & width
+         * @return string 
+         * @static 
+         */
+        public static function render($chartType, $chartLabel, $elementId, $divDimensions = false){
+            return \Khill\Lavacharts\Lavacharts::render($chartType, $chartLabel, $elementId, $divDimensions);
+        }
+        
+        /**
+         * Outputs the link to the Google JSAPI
+         *
+         * @access public
+         * @since v2.3.0
+         * @return string 
+         * @static 
+         */
+        public static function jsapi(){
+            return \Khill\Lavacharts\Lavacharts::jsapi();
+        }
+        
+        /**
+         * Checks to see if the given chart type and title exists in the volcano storage.
+         *
+         * @access public
+         * @since v2.4.2
+         * @return string 
+         * @static 
+         */
+        public static function exists($type, $label){
+            return \Khill\Lavacharts\Lavacharts::exists($type, $label);
+        }
+
+        /**
+         *
+         *
+         * @access public
+         * @since v2.4.2
+         * @return \Khill\Lavacharts\Configs\DataTable
+         * @static
+         */
+        public static function DataTable(){
+            return \Khill\Lavacharts\Configs\self::DataTable();
+        }
+
+
+        /**
+         *
+         *
+         * @access public
+         * @since v2.4.2
+         * @return \Khill\Lavacharts\Charts\LineChart
+         * @static
+         */
+        public static function LineChart($chartLabel){
+            return \Khill\Lavacharts\Charts\self::LineChart($chartLabel);
+        }
+
+
         
     }
 

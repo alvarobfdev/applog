@@ -17,7 +17,8 @@
         "h4cc/wkhtmltopdf-i386": "0.12.2.1",
         "barryvdh/laravel-ide-helper": "^2.1",
         "doctrine/dbal": "^2.5",
-        "chumper/zipper": "0.6.x"
+        "chumper/zipper": "0.6.x",
+        "khill/lavacharts" : "2.5.*"
 
     },
     "require-dev": {

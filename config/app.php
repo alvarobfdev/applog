@@ -152,6 +152,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class
+
 
 
     ],
@@ -207,7 +209,8 @@ return [
         'Socialize' => Laravel\Socialite\Facades\Socialite::class,
         'Markdown'  => GrahamCampbell\Markdown\Facades\Markdown::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'Zipper' => Chumper\Zipper\Zipper::class
+        'Zipper' => Chumper\Zipper\Zipper::class,
+        'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class
 
     ],
 
