@@ -311,6 +311,7 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                 <div class="cabFactura">
                     <div class="info info-numfac">
                         <div class="meta">Factura Nº</div>
+                        <div class="valueNumFac">{{$row->serfac}}/{{$row->ejefac}}/{{$row->numfac}}</div>
                     </div>
                     <div class="numPag">Pág. {{$pagActual}}/{{$numPags}}</div>
                     <div class="info info-fecha">
