@@ -290,7 +290,7 @@ setlocale(LC_MONETARY, 'it_IT.UTF-8');
                 <div class="logo">
                     <img src="{{url("logival/img/logo-3.png")}}">
                     <div class="datosEmpresa">
-                        <div class="linea"><span>CIF. B 96985519</span> | <span><strong>www.logival.es</strong></span> </div>
+                        <div class="linea"><span>CIF. B 96985510</span> | <span><strong>www.logival.es</strong></span> </div>
                         <div class="linea">Camí Faitanar N.3 · CP. 46210 Picanya. Valencia</div>
                         <div class="linea">T.961 590 861 · F.961 590 466 | contacto@logival.es</div>
                     </div>
