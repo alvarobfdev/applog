@@ -29,13 +29,14 @@ class ApiController extends Controller
             $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $pdfContents = \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
             $zip->addString($nombreFact, $pdfContents);
-            $zip->close();
-            $response = \Response::make(file_get_contents(storage_path() ."/app/tmp/$uid/facturas.zip"));
-            \Storage::drive("local")->deleteDirectory("tmp/$uid");
-            $now = Carbon::now()->toDateTimeString();
-            $response->header('Content-Disposition', 'attachment; filename="facturas-'.$now.'.zip"');
-            return $response;
         }
+
+        /*Cerramos ZIP, eliminamos temportal y  descargamos*/
+        $zip->close();
+        $response = \Response::make(file_get_contents(storage_path() ."/app/tmp/$uid/facturas.zip"));
+        \Storage::drive("local")->deleteDirectory("tmp/$uid");
+        $response->header('Content-Disposition', 'attachment; filename="facturas.zip"');
+        return $response;
     }
 
     private function groupsInvoice($factura) {
