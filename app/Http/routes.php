@@ -18,6 +18,8 @@ Route::get('/', 'HomeController@index');
 Route::controller('home', 'HomeController');
 
 Route::controller('/user', 'UserController');
+Route::controller('/api', 'ApiController');
+
 include('pageroutes.php');
 include('moduleroutes.php');
 
