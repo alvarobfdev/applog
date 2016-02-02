@@ -36,6 +36,8 @@ class ApiController extends Controller
         $response = \Response::make(file_get_contents(storage_path() ."/app/tmp/$uid/facturas.zip"));
         \Storage::drive("local")->deleteDirectory("tmp/$uid");
         $response->header('Content-Disposition', 'attachment; filename="facturas.zip"');
+        $response->header('Content-Length',strlen($response->getOriginalContent()));
+
         return $response;
     }
 
