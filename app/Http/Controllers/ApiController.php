@@ -18,8 +18,8 @@ class ApiController extends Controller
         $data = \Request::get("jsonData");
         $facturas = json_decode($data, true);
 
-        $view = $this->viewInvoice($facturas[0]);
-        return $view;
+        //$view = $this->viewInvoice($facturas[0]);
+        //return $view;
 
         /*Generamos ZIP*/
         $uid = uniqid();
