@@ -18,6 +18,9 @@ class ApiController extends Controller
         $data = \Request::get("jsonData");
         $facturas = json_decode($data, true);
 
+        $view = $this->viewInvoice($facturas[0]);
+        return $view;
+
         /*Generamos ZIP*/
         $uid = uniqid();
         $zip = new \Chumper\Zipper\Zipper;
@@ -26,6 +29,7 @@ class ApiController extends Controller
         /*Insertamos cada factura en el zip*/
         foreach($facturas as $factura) {
             $view = $this->viewInvoice($factura);
+
             $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $pdfContents = \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
             $zip->addString($nombreFact, $pdfContents);
@@ -39,6 +43,17 @@ class ApiController extends Controller
         $response->header('Content-Length',strlen($response->getOriginalContent()));
 
         return $response;
+    }
+
+
+    public function postPdfInvoicesSummary() {
+        $data = \Request::get("jsonData");
+        $facturas = json_decode($data, true);
+        $data['facturas'] = $facturas;
+        $view = view('factura.invoicesSummary', $data)->render();
+        \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->download();
+
+
     }
 
     private function groupsInvoice($factura) {
