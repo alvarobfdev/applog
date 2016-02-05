@@ -16,6 +16,7 @@ class ApiController extends Controller
 {
     public function postPdfInvoice() {
         $data = \Request::get("jsonData");
+        $data = utf8_encode($data);
         $facturas = json_decode($data, true);
 
         //$view = $this->viewInvoice($facturas[0]);
