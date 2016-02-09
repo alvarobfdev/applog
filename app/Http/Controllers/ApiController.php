@@ -110,7 +110,7 @@ class ApiController extends Controller
 
             }
         } catch(\Exception $e) {
-            echo "error";
+            echo "error:" . $e->getMessage();
         }
     }
 
