@@ -105,7 +105,7 @@ class ApiController extends Controller
                 $ftpConnection->uploadFile($pdfPath, "/facturas/$uidPdf.pdf");
 
                 \Storage::drive("local")->deleteDirectory("tmp/$uidFolder");
-                
+
                 echo "ok";
 
             }
