@@ -81,10 +81,10 @@ class ApiController extends Controller
         return $view;
     }
 
-    public function postRefreshPdfWeb(\Request $request) {
+    public function postRefreshPdfWeb() {
 
         try {
-            $data = $request->get("jsonData");
+            $data = \Request::get("jsonData");
             $data = utf8_encode($data);
             $facturas = json_decode($data, true);
             $uidFolder = uniqid();
