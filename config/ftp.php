@@ -25,11 +25,7 @@ return array(
     'connections' => array(
 
         'connection1' => array(
-            'host'   => '213.162.195.213',
-            'port'  => 21,
-            'username' => 'clienteslogival',
-            'password'   => 'cl1347',
-            'passive'   => false,
+            
         ),
     ),
 );
