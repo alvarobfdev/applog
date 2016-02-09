@@ -18,7 +18,8 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "doctrine/dbal": "^2.5",
         "chumper/zipper": "0.6.x",
-        "khill/lavacharts" : "2.5.*"
+        "khill/lavacharts" : "2.5.*",
+        "anchu/ftp": "~2.0"
 
     },
     "require-dev": {

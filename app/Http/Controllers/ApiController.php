@@ -80,4 +80,39 @@ class ApiController extends Controller
         $view = view('factura.pdfInvoice', $data)->render();
         return $view;
     }
+
+    public function postRefreshPdfWeb(\Request $request) {
+
+        try {
+            $data = $request->get("jsonData");
+            $data = utf8_encode($data);
+            $facturas = json_decode($data, true);
+            $uidFolder = uniqid();
+            \File::makeDirectory(storage_path("app") . "/tmp/$uidFolder");
+
+            $ftpConnection = \FTP::connection();
+
+            foreach ($facturas as $factura) {
+                $view = $this->viewInvoice($factura);
+                $uidPdf = uniqid();
+
+                $pdfPath = storage_path("app") . "/tmp/$uidFolder/$uidPdf.pdf";
+
+                \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)
+                    ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)
+                    ->save($pdfPath);
+
+                $ftpConnection->uploadFile($pdfPath, "/facturas/$uidPdf.pdf");
+
+                \Storage::drive("local")->deleteDirectory("tmp/$uidFolder");
+                
+                echo "ok";
+
+            }
+        } catch(\Exception $e) {
+            echo "error";
+        }
+    }
+
+
 }

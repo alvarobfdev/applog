@@ -138,6 +138,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Chumper\Zipper\ZipperServiceProvider::class,
+        Anchu\Ftp\FtpServiceProvider::class,
 
 
         /*
@@ -210,7 +211,8 @@ return [
         'Markdown'  => GrahamCampbell\Markdown\Facades\Markdown::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
-        'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class
+        'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
+        'FTP' => Anchu\Ftp\Facades\Ftp::class
 
     ],
 

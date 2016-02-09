@@ -18,6 +18,7 @@
 use Khill\Lavacharts\Utils;
 use Khill\Lavacharts\JavascriptFactory;
 use Khill\Lavacharts\Configs\DataTable;
+use Khill\Lavacharts\Configs\Animation;
 use Khill\Lavacharts\Configs\Legend;
 use Khill\Lavacharts\Configs\Tooltip;
 use Khill\Lavacharts\Configs\TextStyle;
@@ -48,6 +49,7 @@ class Chart
         $this->label = $chartLabel;
         $this->defaults = array(
             'datatable',
+            'animation',
             'backgroundColor',
             'chartArea',
             'colors',
@@ -62,6 +64,40 @@ class Chart
             'tooltip',
             'width'
         );
+    }
+
+    /**
+     * Sets any configuration option, with no checks for type / validity
+     *
+     *
+     * This is more or less a bandaid to remove the handcuffs from users
+     * who want to add options that Google has added, that I have not.
+     * I didn't intend to restrict the user to only select options, as the
+     * goal was to type check and validate. This method can be used to set
+     * any option, just pass in arrays with key value pairs for any setting.
+     *
+     * If the setting is an object, per the google docs, then use multi-dimensional
+     * arrays and they will be converted upon rendering.
+     *
+     * This method will most likely be brought into 3.0 to prevent BC breaks, but I
+     * will incorporate the same functionality without the need for the extra
+     * customize() method call.
+     *
+     * @param  array $optionArray
+     * @return this
+     */
+    public function customize($optionArray)
+    {
+        if (is_array($optionArray)) {
+            $this->options = array_merge($this->options, $optionArray);
+        } else {
+            throw new InvalidConfigValue(
+                __FUNCTION__,
+                'array'
+            );
+        }
+
+        return $this;
     }
 
     /**
@@ -181,6 +217,20 @@ class Chart
     public function getDataTableJson()
     {
         return $this->datatable->toJson();
+    }
+
+    /**
+     * Defines how chart animations will be displayed.
+     *
+     * @since  v2.5.10
+     * @uses   Animation
+     * @param  Animation $a
+     *
+     * @return Chart
+     */
+    public function animation(Animation $a)
+    {
+        return $this->addOption($a->toArray());
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.1.27 (LTS) on 2015-12-22.
+ * Generated for Laravel 5.1.29 (LTS) on 2016-02-08.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -2110,6 +2110,30 @@ namespace {
         }
         
         /**
+         * Begin executing a new tags operation if the store supports it.
+         *
+         * @param string $name
+         * @return \Illuminate\Cache\TaggedCache 
+         * @deprecated since version 5.1. Use tags instead.
+         * @static 
+         */
+        public static function section($name){
+            return \Illuminate\Cache\Repository::section($name);
+        }
+        
+        /**
+         * Begin executing a new tags operation if the store supports it.
+         *
+         * @param array|mixed $names
+         * @return \Illuminate\Cache\TaggedCache 
+         * @throws \BadMethodCallException
+         * @static 
+         */
+        public static function tags($names){
+            return \Illuminate\Cache\Repository::tags($names);
+        }
+        
+        /**
          * Get the default cache time.
          *
          * @return int 
@@ -3441,11 +3465,11 @@ namespace {
          *
          * @param int $count
          * @param callable $callback
-         * @return void 
+         * @return bool 
          * @static 
          */
         public static function chunk($count, $callback){
-            \Illuminate\Database\Eloquent\Builder::chunk($count, $callback);
+            return \Illuminate\Database\Eloquent\Builder::chunk($count, $callback);
         }
         
         /**
@@ -4871,7 +4895,7 @@ namespace {
     class File extends \Illuminate\Support\Facades\File{
         
         /**
-         * Determine if a file exists.
+         * Determine if a file or directory exists.
          *
          * @param string $path
          * @return bool 
@@ -11471,7 +11495,7 @@ namespace {
          * @param string $path
          * @param array $data
          * @param array $mergeData
-         * @return \Illuminate\View\View 
+         * @return \Illuminate\Contracts\View\View 
          * @static 
          */
         public static function file($path, $data = array(), $mergeData = array()){
@@ -11496,7 +11520,7 @@ namespace {
          *
          * @param string $view
          * @param mixed $data
-         * @return \Illuminate\View\View 
+         * @return \Illuminate\Contracts\View\View 
          * @static 
          */
         public static function of($view, $data = array()){
@@ -11615,7 +11639,7 @@ namespace {
         /**
          * Call the composer for a given view.
          *
-         * @param \Illuminate\View\View $view
+         * @param \Illuminate\Contracts\View\View $view
          * @return void 
          * @static 
          */
@@ -11626,7 +11650,7 @@ namespace {
         /**
          * Call the creator for a given view.
          *
-         * @param \Illuminate\View\View $view
+         * @param \Illuminate\Contracts\View\View $view
          * @return void 
          * @static 
          */
@@ -13521,33 +13545,63 @@ namespace {
         public static function exists($type, $label){
             return \Khill\Lavacharts\Lavacharts::exists($type, $label);
         }
+        
+    }
 
+
+    class FTP extends \Anchu\Ftp\Facades\Ftp{
+        
         /**
+         * Get the default connection name.
          *
+         * @return string 
+         * @static 
+         */
+        public static function getDefaultConnection(){
+            return \Anchu\Ftp\FtpManager::getDefaultConnection();
+        }
+        
+        /**
+         * Get a FTP connection instance.
          *
-         * @access public
-         * @since v2.4.2
-         * @return \Khill\Lavacharts\Configs\DataTable
+         * @param string $name
          * @static
          */
-        public static function DataTable(){
-            return \Khill\Lavacharts\Configs\self::DataTable();
+        public static function connection($name = null){
+            return \Anchu\Ftp\FtpManager::connection($name);
         }
-
-
+        
         /**
+         * Disconnect from the given ftp.
          *
-         *
-         * @access public
-         * @since v2.4.2
-         * @return \Khill\Lavacharts\Charts\LineChart
-         * @static
+         * @param string $name
+         * @return void 
+         * @static 
          */
-        public static function LineChart($chartLabel){
-            return \Khill\Lavacharts\Charts\self::LineChart($chartLabel);
+        public static function disconnect($name = null){
+            \Anchu\Ftp\FtpManager::disconnect($name);
         }
-
-
+        
+        /**
+         * Reconnect to the given ftp.
+         *
+         * @param string $name
+         * @return \Anchu\Ftp\Ftp 
+         * @static 
+         */
+        public static function reconnect($name = null){
+            return \Anchu\Ftp\FtpManager::reconnect($name);
+        }
+        
+        /**
+         * Return all of the created connections.
+         *
+         * @return array 
+         * @static 
+         */
+        public static function getConnections(){
+            return \Anchu\Ftp\FtpManager::getConnections();
+        }
         
     }
 
