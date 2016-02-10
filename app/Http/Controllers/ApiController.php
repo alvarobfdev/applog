@@ -91,9 +91,15 @@ class ApiController extends Controller
             \File::makeDirectory(storage_path("app") . "/tmp/$uidFolder");
 
             $ftpConnection = \FTP::connection();
+            $facturasPost = array();
+
 
             foreach ($facturas as $factura) {
+
+
                 $view = $this->viewInvoice($factura);
+                $view = str_replace("localhost:8080", "localhost", $view);
+
                 $uidPdf = uniqid();
 
                 $pdfPath = storage_path("app") . "/tmp/$uidFolder/$uidPdf.pdf";
@@ -102,16 +108,51 @@ class ApiController extends Controller
                     ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)
                     ->save($pdfPath);
 
-                $ftpConnection->uploadFile($pdfPath, "/facturas/$uidPdf.pdf");
+                if(!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
+                    return "error: Fallo al cargar factura $uidPdf.pdf a la web";
+                }
 
-                \Storage::drive("local")->deleteDirectory("tmp/$uidFolder");
 
-                echo "ok";
+                \File::deleteDirectory($pdfPath);
 
+                $facturasPost[] = [
+                    "fecha" => Carbon::parse($factura["fecfac"])->format("Y-m-d"),
+                    "ejercicio" => $factura["id"]["ejefac"],
+                    "num_factura" => $factura["id"]["numfac"],
+                    "cliente_id" => $factura["codcli"],
+                    "total_factura" => $factura["totfac"],
+                    "file_pdf" => "$uidPdf.pdf"
+                ];
+                $postData = ["jsonData" => json_encode($facturasPost)];
             }
+
+            $result = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
+
+            if($result != "ok") {
+                return "error: ".$result;
+            }
+
+            return "ok";
+
+
         } catch(\Exception $e) {
-            echo "error:" . $e->getMessage();
+            return "error: " . $e->getMessage();
         }
+    }
+
+    private function sendPostRequest($url, $data) {
+
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($data),
+            ),
+        );
+        $context  = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        return $result;
     }
 
 

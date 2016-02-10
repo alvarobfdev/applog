@@ -215,12 +215,14 @@ class Ftp {
      */
     public function uploadFile($fileFrom, $fileTo)
     {
+
         try {
             if(ftp_put($this->connectionId, $fileTo, $fileFrom, $this->findTransferModeForFile($fileFrom)))
                 return true;
             else
                 return false;
         } catch(\Exception $e) {
+            \Log::error($e->getFile()."(".$e->getLine().") ".$e->getMessage());
             return false;
         }
     }
