@@ -115,6 +115,8 @@ class ApiController extends Controller
 
                 \File::deleteDirectory($pdfPath);
 
+
+
                 $facturasPost[] = [
                     "fecha" => Carbon::parse($factura["fecfac"])->format("Y-m-d"),
                     "ejercicio" => $factura["id"]["ejefac"],
@@ -123,9 +125,10 @@ class ApiController extends Controller
                     "total_factura" => $factura["totfac"],
                     "file_pdf" => "$uidPdf.pdf"
                 ];
-                $postData = ["jsonData" => json_encode($facturasPost)];
+
             }
 
+            $postData = ["jsonData" => json_encode($facturasPost)];
             $result = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
 
             if($result != "ok") {
@@ -141,7 +144,6 @@ class ApiController extends Controller
     }
 
     private function sendPostRequest($url, $data) {
-
         // use key 'http' even if you send the request to https://...
         $options = array(
             'http' => array(
