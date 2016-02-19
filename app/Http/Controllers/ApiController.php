@@ -134,17 +134,17 @@ class ApiController extends Controller
 
 
             if(count($this->webInvoicesToAdd)> 0) {
-                $postData = ["jsonData" => json_encode($facturasPost)];
+                $postData = ["jsonData" => json_encode($this->webInvoicesToAdd)];
                 $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
             }
 
             if(count($this->webInvoicesToModify)> 0) {
-                $postData = ["jsonData" => json_encode($facturasPost)];
+                $postData = ["jsonData" => json_encode($this->webInvoicesToModify)];
                 $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=modifyInvoice", $postData);
             }
 
             if(count($this->webInvoicesToDelete)> 0) {
-                $postData = ["jsonData" => json_encode($facturasPost)];
+                $postData = ["jsonData" => json_encode($this->webInvoicesToDelete)];
                 $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=deleteInvoice", $postData);
             }
 
