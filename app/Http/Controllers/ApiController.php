@@ -177,6 +177,8 @@ class ApiController extends Controller
     }
 
     private function webInvoiceExists($factura) {
+        
+        dd($factura);
 
         return (FacturasWeb::where("ejercicio", $factura["ejercicio"])->where("num_factura", $factura["num_factura"])->count() > 0);
     }
