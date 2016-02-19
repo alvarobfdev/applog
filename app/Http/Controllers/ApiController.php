@@ -254,6 +254,8 @@ class ApiController extends Controller
         $ftpConnection = \FTP::connection();
         $ftpConnection->delete("httpsdocs/facturas/$pdfName");
 
+        echo "httpsdocs/facturas/$pdfName";
+        
         $this->webInvoicesToDelete[] = [
             "fecha" => $facturaModel->fecha,
             "ejercicio" => $facturaModel->ejercicio,
