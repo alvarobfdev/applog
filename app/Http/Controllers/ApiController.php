@@ -178,10 +178,7 @@ class ApiController extends Controller
 
     private function webInvoiceExists($factura) {
 
-        var_dump($factura);
-        die();
-
-        return (FacturasWeb::where("ejercicio", $factura["ejercicio"])->where("num_factura", $factura["num_factura"])->count() > 0);
+        return (FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->count() > 0);
     }
 
     private function addWebInvoiceToAdd($factura, $tmpDir)
@@ -219,7 +216,7 @@ class ApiController extends Controller
     }
 
     private function addWebInvoiceToModify($factura, $tmpDir) {
-        $facturaModel = FacturasWeb::where("ejercicio", $factura["ejercicio"])->where("num_factura", $factura["num_factura"])->firstOrFail();
+        $facturaModel = FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->firstOrFail();
         $pdfName = $facturaModel->file_pdf;
 
         $ftpConnection = \FTP::connection();
@@ -252,7 +249,7 @@ class ApiController extends Controller
     }
 
     private function addWebInvoiceToDelete($factura) {
-        $facturaModel = FacturasWeb::where("ejercicio", $factura["ejercicio"])->where("num_factura", $factura["num_factura"])->firstOrFail();
+        $facturaModel = FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->firstOrFail();
         $pdfName = $facturaModel->file_pdf;
         $ftpConnection = \FTP::connection();
         $ftpConnection->delete("httpsdocs/facturas/$pdfName");
