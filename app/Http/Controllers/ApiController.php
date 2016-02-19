@@ -157,7 +157,7 @@ class ApiController extends Controller
 
 
         } catch (\Exception $e) {
-            return "error: " . $e->getTraceAsString();
+            return "error: " .$e->getMessage()." ". $e->getTraceAsString();
         }
     }
 
