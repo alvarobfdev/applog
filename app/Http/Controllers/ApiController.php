@@ -171,7 +171,7 @@ class ApiController extends Controller
                 }
             }
 
-            \File::deleteDirectory($tmpDir);
+            \File::deleteDirectory(storage_path("app") . $tmpDir);
 
 
             $return = $this->refreshWebDB();
