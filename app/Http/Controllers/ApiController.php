@@ -21,6 +21,9 @@ class ApiController extends Controller
     private $webInvoicesToModify = array();
     private $webInvoicesToDelete = array();
 
+    private $invoicesToWebRefresh = array();
+    private $tmpDir = null;
+
 
     public function postPdfInvoice()
     {
@@ -36,6 +39,9 @@ class ApiController extends Controller
         $zip = new \Chumper\Zipper\Zipper;
         $zip->make(storage_path() . "/app/tmp/$uid/facturas.zip");
 
+        $tmpDir = "/tmp/$uid";
+        $this->tmpDir = $tmpDir;
+
         /*Insertamos cada factura en el zip*/
         foreach ($facturas as $factura) {
             $view = $this->viewInvoice($factura);
@@ -43,6 +49,15 @@ class ApiController extends Controller
             $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $pdfContents = \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
             $zip->addString($nombreFact, $pdfContents);
+            $uidPdf = uniqid();
+
+            \File::put(storage_path("app") . "$tmpDir/$uidPdf.pdf", $pdfContents);
+            $this->invoicesToWebRefresh[$uidPdf] = $factura;
+            $return = refreshWeb();
+
+            if($return != "ok") {
+                die("error!");
+            }
         }
 
         /*Cerramos ZIP, eliminamos temportal y  descargamos*/
@@ -51,8 +66,30 @@ class ApiController extends Controller
         \Storage::drive("local")->deleteDirectory("tmp/$uid");
         $response->header('Content-Disposition', 'attachment; filename="facturas.zip"');
         $response->header('Content-Length', strlen($response->getOriginalContent()));
-
+        \File::deleteDirectory(storage_path("app") . "/tmp/$uid");
         return $response;
+    }
+
+    public function refreshWeb() {
+        foreach($this->invoicesToWebRefresh as $facturaName => $factura) {
+
+            if ($factura["web"]) {
+
+                if ($this->webInvoiceExists($factura)) {
+                    $return = $this->addWebInvoiceToModify($factura, null, $this->tmpDir."/$facturaName.pdf", $facturaName);
+                } else {
+                    $return = $this->addWebInvoiceToAdd($factura, null, $this->tmpDir."/$facturaName.pdf", $facturaName);
+                }
+            } else {
+                if ($this->webInvoiceExists($factura)) {
+                    $return = $this->addWebInvoiceToDelete($factura);
+                }
+            }
+        }
+
+        $return = $this->refreshWebDB();
+
+        return $return;
     }
 
 
@@ -133,20 +170,7 @@ class ApiController extends Controller
             \File::deleteDirectory($tmpDir);
 
 
-            if(count($this->webInvoicesToAdd)> 0) {
-                $postData = ["jsonData" => json_encode($this->webInvoicesToAdd)];
-                $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
-            }
-
-            if(count($this->webInvoicesToModify)> 0) {
-                $postData = ["jsonData" => json_encode($this->webInvoicesToModify)];
-                $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=modifyInvoice", $postData);
-            }
-
-            if(count($this->webInvoicesToDelete)> 0) {
-                $postData = ["jsonData" => json_encode($this->webInvoicesToDelete)];
-                $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=deleteInvoice", $postData);
-            }
+            $return = $this->refreshWebDB();
 
 
             if ($return != "ok") {
@@ -181,11 +205,13 @@ class ApiController extends Controller
         return (FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->count() > 0);
     }
 
-    private function addWebInvoiceToAdd($factura, $tmpDir)
+    private function addWebInvoiceToAdd($factura, $tmpDir, $pdfPath = null, $uidPdf = null)
     {
         $ftpConnection = \FTP::connection();
 
-        list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
+        if($pdfPath == null || $uidPdf == null)
+            list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
+
 
         if (!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
             return "error: Fallo al cargar factura $uidPdf.pdf a la web";
@@ -215,14 +241,15 @@ class ApiController extends Controller
         return "ok";
     }
 
-    private function addWebInvoiceToModify($factura, $tmpDir) {
+    private function addWebInvoiceToModify($factura, $tmpDir, $pdfPath = null, $uidPdf = null) {
         $facturaModel = FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->firstOrFail();
         $pdfName = $facturaModel->file_pdf;
 
         $ftpConnection = \FTP::connection();
         $ftpConnection->delete("httpsdocs/facturas/$pdfName");
 
-        list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
+        if($pdfPath == null || $uidPdf == null)
+            list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
 
         if (!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
             return "error: Fallo al cargar factura $uidPdf.pdf a la web";
@@ -255,7 +282,7 @@ class ApiController extends Controller
         $ftpConnection->delete("httpsdocs/facturas/$pdfName");
 
         echo "httpsdocs/facturas/$pdfName";
-        
+
         $this->webInvoicesToDelete[] = [
             "fecha" => $facturaModel->fecha,
             "ejercicio" => $facturaModel->ejercicio,
@@ -285,6 +312,31 @@ class ApiController extends Controller
             ->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)
             ->save($pdfPath);
         return array($uidPdf, $pdfPath);
+    }
+
+    /**
+     * @return string
+     */
+    private function refreshWebDB()
+    {
+        $return = "ok";
+
+        if (count($this->webInvoicesToAdd) > 0) {
+            $postData = ["jsonData" => json_encode($this->webInvoicesToAdd)];
+            $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
+        }
+
+        if (count($this->webInvoicesToModify) > 0) {
+            $postData = ["jsonData" => json_encode($this->webInvoicesToModify)];
+            $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=modifyInvoice", $postData);
+        }
+
+        if (count($this->webInvoicesToDelete) > 0) {
+            $postData = ["jsonData" => json_encode($this->webInvoicesToDelete)];
+            $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=deleteInvoice", $postData);
+            return $return;
+        }
+        return $return;
     }
 
 
