@@ -53,7 +53,7 @@ class ApiController extends Controller
 
             \File::put(storage_path("app") . "$tmpDir/$uidPdf.pdf", $pdfContents);
             $this->invoicesToWebRefresh[$uidPdf] = $factura;
-            $return = refreshWeb();
+            $return = $this->refreshWeb();
 
             if($return != "ok") {
                 die("error!");
