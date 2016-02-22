@@ -40,18 +40,18 @@ class ApiController extends Controller
         $zip->make(storage_path() . "/app/tmp/$uid/facturas.zip");
 
         $tmpDir = "/tmp/$uid";
-        $this->tmpDir = $tmpDir;
+        $this->tmpDir = storage_path('app').$tmpDir;
 
         /*Insertamos cada factura en el zip*/
         foreach ($facturas as $factura) {
             $view = $this->viewInvoice($factura);
-
+            $view = str_replace("localhost:8080", "localhost", $view);
             $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $pdfContents = \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
             $zip->addString($nombreFact, $pdfContents);
             $uidPdf = uniqid();
 
-            \File::put(storage_path("app") . "$tmpDir/$uidPdf.pdf", $pdfContents);
+            \File::put($this->tmpDir."/$uidPdf.pdf", $pdfContents);
             $this->invoicesToWebRefresh[$uidPdf] = $factura;
             $return = $this->refreshWeb();
 
@@ -71,6 +71,7 @@ class ApiController extends Controller
     }
 
     public function refreshWeb() {
+        $return = "ok";
         foreach($this->invoicesToWebRefresh as $facturaName => $factura) {
 
             if ($factura["web"]) {
@@ -85,6 +86,9 @@ class ApiController extends Controller
                     $return = $this->addWebInvoiceToDelete($factura);
                 }
             }
+        }
+        if($return != "ok") {
+            return "error";
         }
 
         $return = $this->refreshWebDB();
@@ -207,11 +211,11 @@ class ApiController extends Controller
 
     private function addWebInvoiceToAdd($factura, $tmpDir, $pdfPath = null, $uidPdf = null)
     {
+
         $ftpConnection = \FTP::connection();
 
         if($pdfPath == null || $uidPdf == null)
             list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
-
 
         if (!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
             return "error: Fallo al cargar factura $uidPdf.pdf a la web";
@@ -237,7 +241,6 @@ class ApiController extends Controller
         ];
 
         \FTP::disconnect();
-
         return "ok";
     }
 
