@@ -56,7 +56,7 @@ class ApiController extends Controller
             $return = $this->refreshWeb();
 
             if($return != "ok") {
-                die("error!");
+                die($return);
             }
         }
 
@@ -88,7 +88,7 @@ class ApiController extends Controller
             }
         }
         if($return != "ok") {
-            return "error";
+            return $return;
         }
 
         $return = $this->refreshWebDB();
@@ -229,7 +229,12 @@ class ApiController extends Controller
         $facturaModel->cliente_id = $factura["codcli"];
         $facturaModel->total_factura = $factura["totfac"];
         $facturaModel->file_pdf = "$uidPdf.pdf";
-        $facturaModel->save();
+
+        //Revert on fail
+        if(!$facturaModel->save()) {
+            $ftpConnection->delete("httpsdocs/facturas/$uidPdf.pdf");
+            return "error: Fallo al actualizar base de datos interna";
+        }
 
         $this->webInvoicesToAdd[] = [
             "fecha" => $facturaModel->fecha,
@@ -262,7 +267,12 @@ class ApiController extends Controller
         $facturaModel->cliente_id = $factura["codcli"];
         $facturaModel->total_factura = $factura["totfac"];
         $facturaModel->file_pdf = "$uidPdf.pdf";
-        $facturaModel->save();
+
+        //Revert on fail
+        if(!$facturaModel->save()) {
+            $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+            return "error: Fallo al actualizar base de datos interna";
+        }
 
         $this->webInvoicesToModify[] = [
             "fecha" => $facturaModel->fecha,
@@ -282,7 +292,7 @@ class ApiController extends Controller
         $facturaModel = FacturasWeb::where("ejercicio", $factura["id"]["ejefac"])->where("num_factura", $factura["id"]["numfac"])->firstOrFail();
         $pdfName = $facturaModel->file_pdf;
         $ftpConnection = \FTP::connection();
-        $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+
 
         $this->webInvoicesToDelete[] = [
             "fecha" => $facturaModel->fecha,
@@ -293,7 +303,13 @@ class ApiController extends Controller
             "file_pdf" => $facturaModel->file_pdf
         ];
 
-        $facturaModel->delete();
+        if(!$facturaModel->delete()) {
+            return "error: Fallo al actualizar base de datos interna";
+        }
+
+        $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+        \FTP::disconnect();
+
         return "ok";
     }
 
@@ -325,19 +341,39 @@ class ApiController extends Controller
         if (count($this->webInvoicesToAdd) > 0) {
             $postData = ["jsonData" => json_encode($this->webInvoicesToAdd)];
             $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=addInvoice", $postData);
+
+            if($return != "ok") {
+                $this->revert($this->webInvoicesToAdd);
+            }
         }
 
         if (count($this->webInvoicesToModify) > 0) {
             $postData = ["jsonData" => json_encode($this->webInvoicesToModify)];
             $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=modifyInvoice", $postData);
+            if($return != "ok") {
+                $this->revert($this->webInvoicesToModify);
+            }
         }
 
         if (count($this->webInvoicesToDelete) > 0) {
             $postData = ["jsonData" => json_encode($this->webInvoicesToDelete)];
             $return = $this->sendPostRequest("https://clientes.logival.es/api.php?user=api&pass=logivalapp&function=deleteInvoice", $postData);
-            return $return;
         }
+
         return $return;
+    }
+
+    private function revert($facturas) {
+        $ftpConnection = \FTP::connection();
+
+        foreach($facturas as $factura) {
+            $numFac = $factura["num_factura"];
+            $ejercicio = $factura["ejercicio"];
+            $pdfName = $factura["file_pdf"];
+            FacturasWeb::where("num_factura", $numFac)->where("ejercicio", $ejercicio)->delete();
+            $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+        }
+        \FTP::disconnect();
     }
 
 
