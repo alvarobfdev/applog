@@ -229,6 +229,7 @@ class ApiController extends Controller
         $facturaModel->cliente_id = $factura["codcli"];
         $facturaModel->total_factura = $factura["totfac"];
         $facturaModel->file_pdf = "$uidPdf.pdf";
+        $facturaModel->reducida = $factura["reducida"];
 
         //Revert on fail
         if(!$facturaModel->save()) {
@@ -243,6 +244,7 @@ class ApiController extends Controller
             "cliente_id" => $facturaModel->cliente_id,
             "total_factura" => $facturaModel->total_factura,
             "file_pdf" => $facturaModel->file_pdf
+
         ];
 
         \FTP::disconnect();
@@ -267,6 +269,7 @@ class ApiController extends Controller
         $facturaModel->cliente_id = $factura["codcli"];
         $facturaModel->total_factura = $factura["totfac"];
         $facturaModel->file_pdf = "$uidPdf.pdf";
+        $facturaModel->reducida = $factura["reducida"];
 
         //Revert on fail
         if(!$facturaModel->save()) {
