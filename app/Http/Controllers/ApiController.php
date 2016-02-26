@@ -53,11 +53,13 @@ class ApiController extends Controller
 
             \File::put($this->tmpDir."/$uidPdf.pdf", $pdfContents);
             $this->invoicesToWebRefresh[$uidPdf] = $factura;
-            $return = $this->refreshWeb();
 
-            if($return != "ok") {
-                die($return);
-            }
+        }
+
+        $return = $this->refreshWeb();
+
+        if($return != "ok") {
+            die($return);
         }
 
         /*Cerramos ZIP, eliminamos temportal y  descargamos*/
@@ -67,6 +69,7 @@ class ApiController extends Controller
         $response->header('Content-Disposition', 'attachment; filename="facturas.zip"');
         $response->header('Content-Length', strlen($response->getOriginalContent()));
         \File::deleteDirectory(storage_path("app") . "/tmp/$uid");
+        
         return $response;
     }
 
@@ -236,6 +239,7 @@ class ApiController extends Controller
             $ftpConnection->delete("httpsdocs/facturas/$uidPdf.pdf");
             return "error: Fallo al actualizar base de datos interna";
         }
+
 
         $this->webInvoicesToAdd[] = [
             "fecha" => $facturaModel->fecha,
