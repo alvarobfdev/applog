@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 
+use App\Models\cliente;
 use App\Models\FacturasWeb;
 use App\User;
 use Carbon\Carbon;
@@ -46,8 +47,8 @@ class ApiController extends Controller
         foreach ($facturas as $factura) {
             $view = $this->viewInvoice($factura);
             $view = str_replace("localhost:8080", "localhost", $view);
-            $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $pdfContents = \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->output();
+            $nombreFact = "factura-{$factura['id']['serfac']}-{$factura['id']['ejefac']}-{$factura['id']['numfac']}.pdf";
             $zip->addString($nombreFact, $pdfContents);
             $uidPdf = uniqid();
 
@@ -69,7 +70,7 @@ class ApiController extends Controller
         $response->header('Content-Disposition', 'attachment; filename="facturas.zip"');
         $response->header('Content-Length', strlen($response->getOriginalContent()));
         \File::deleteDirectory(storage_path("app") . "/tmp/$uid");
-        
+
         return $response;
     }
 
@@ -109,6 +110,40 @@ class ApiController extends Controller
         \PDF::loadHTML($view)->setPaper('a4')->setOption('margin-right', 0)->setOption('margin-bottom', 0)->setOption('margin-left', 0)->setOption('margin-top', 0)->download();
 
 
+    }
+
+    public function postSendInvoiceToClient()
+    {
+        $data = \Request::get("jsonData");
+        $facturas = json_decode($data, true);
+        foreach($facturas as $factura) {
+            $this->sendInvoiceToClient($factura);
+        }
+    }
+
+    private function sendInvoiceToClient($factura) {
+        $codCli = $factura["codcli"];
+        $cliente = cliente::where("codcli", $codCli)->get();
+        if($cliente && $cliente->email) {
+            $tmpUid = uniqid();
+            $tmpDir = storage_path("app")."/tmp/".$tmpUid;
+            list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
+
+            $data = [
+                "pathToImage" => public_path()."/logival/logo-transparente.png"
+            ];
+
+            \Mail::send("emails.invoice", $data, function($message) use ($pdfPath, $cliente, $factura) {
+
+                $message->from("test@test.com", "Test email");
+                $message->to($cliente->email, $cliente->nomacc);
+                $message->subject("Emisión de factura ".$factura["id"]["serfac"]."/".$factura["id"]["ejefac"]."/".$factura["id"]["numfac"]);
+                $message->attach($pdfPath);
+
+            });
+
+            \File::deleteDirectory($tmpDir);
+        }
     }
 
     private function groupsInvoice($factura)
