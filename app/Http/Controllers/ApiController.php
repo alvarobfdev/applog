@@ -123,7 +123,7 @@ class ApiController extends Controller
 
     private function sendInvoiceToClient($factura) {
         $codCli = $factura["codcli"];
-        $cliente = cliente::where("codcli", $codCli)->get();
+        $cliente = cliente::where("codcli", $codCli)->firstOrFail();
         if($cliente && $cliente->email) {
             $tmpUid = uniqid();
             $tmpDir = storage_path("app")."/tmp/".$tmpUid;
@@ -143,6 +143,8 @@ class ApiController extends Controller
             });
 
             \File::deleteDirectory($tmpDir);
+
+            return "ok";
         }
     }
 
