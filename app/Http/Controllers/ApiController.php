@@ -28,6 +28,7 @@ class ApiController extends Controller
 
     public function postPdfInvoice()
     {
+        dd(\Request::all());
         $data = \Request::get("jsonData");
         $data = utf8_encode($data);
         $facturas = json_decode($data, true);
@@ -132,6 +133,8 @@ class ApiController extends Controller
             $data = [
                 "pathToImage" => public_path()."/logival/logo-transparente.png"
             ];
+
+            dd($pdfPath);
 
             \Mail::send("emails.invoice", $data, function($message) use ($pdfPath, $cliente, $factura) {
 
