@@ -368,7 +368,6 @@ class ApiController extends Controller
     {
         $view = $this->viewInvoice($factura);
         $view = str_replace("localhost:8080", "localhost", $view);
-        $view = str_replace(":8888", "", $view);
 
         $uidPdf = uniqid();
         $pdfPath = storage_path("app") . "$tmpDir/$uidPdf.pdf";
