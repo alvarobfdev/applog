@@ -259,7 +259,7 @@ class ApiController extends Controller
         if($pdfPath == null || $uidPdf == null)
             list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
 
-        if (!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
+        if (!$ftpConnection->uploadFile($pdfPath, "clientes.logival.es/facturas/$uidPdf.pdf")) {
             return "error: Fallo al cargar factura $uidPdf.pdf a la web";
         }
 
@@ -275,7 +275,7 @@ class ApiController extends Controller
 
         //Revert on fail
         if(!$facturaModel->save()) {
-            $ftpConnection->delete("httpsdocs/facturas/$uidPdf.pdf");
+            $ftpConnection->delete("clientes.logival.es/facturas/$uidPdf.pdf");
             return "error: Fallo al actualizar base de datos interna";
         }
 
@@ -299,12 +299,12 @@ class ApiController extends Controller
         $pdfName = $facturaModel->file_pdf;
 
         $ftpConnection = \FTP::connection();
-        $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+        $ftpConnection->delete("clientes.logival.es/facturas/$pdfName");
 
         if($pdfPath == null || $uidPdf == null)
             list($uidPdf, $pdfPath) = $this->savePdf($factura, $tmpDir);
 
-        if (!$ftpConnection->uploadFile($pdfPath, "httpsdocs/facturas/$uidPdf.pdf")) {
+        if (!$ftpConnection->uploadFile($pdfPath, "clientes.logival.es/facturas/$uidPdf.pdf")) {
             return "error: Fallo al cargar factura $uidPdf.pdf a la web";
         }
 
@@ -316,7 +316,7 @@ class ApiController extends Controller
 
         //Revert on fail
         if(!$facturaModel->save()) {
-            $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+            $ftpConnection->delete("clientes.logival.es/facturas/$pdfName");
             return "error: Fallo al actualizar base de datos interna";
         }
 
@@ -353,7 +353,7 @@ class ApiController extends Controller
             return "error: Fallo al actualizar base de datos interna";
         }
 
-        $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+        $ftpConnection->delete("clientes.logival.es/facturas/$pdfName");
         \FTP::disconnect();
 
         return "ok";
@@ -419,7 +419,7 @@ class ApiController extends Controller
             $ejercicio = $factura["ejercicio"];
             $pdfName = $factura["file_pdf"];
             FacturasWeb::where("num_factura", $numFac)->where("ejercicio", $ejercicio)->delete();
-            $ftpConnection->delete("httpsdocs/facturas/$pdfName");
+            $ftpConnection->delete("clientes.logival.es/facturas/$pdfName");
         }
         \FTP::disconnect();
     }
