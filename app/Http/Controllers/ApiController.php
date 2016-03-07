@@ -132,7 +132,7 @@ class ApiController extends Controller
             $data = [
                 "pathToImage" => public_path()."/logival/logo-transparente.png"
             ];
-            
+
 
             \Mail::send("emails.invoice", $data, function($message) use ($pdfPath, $cliente, $factura) {
 
@@ -142,6 +142,10 @@ class ApiController extends Controller
                 $message->attach($pdfPath);
 
             });
+
+            dd($pdfPath);
+
+
 
             \File::deleteDirectory($tmpDir);
 
