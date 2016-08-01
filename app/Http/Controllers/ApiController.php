@@ -169,10 +169,17 @@ class ApiController extends Controller
 
         return $groups;
     }
+    
+    function date_compare($a, $b)
+    {
+        $t1 = strtotime($a['feccal']);
+        $t2 = strtotime($b['feccal']);
+        return $t1 - $t2;
+    }
 
     private function viewInvoice($factura)
     {
-
+        usort($factura['lines'], 'date_compare');
         $data['factura'] = $factura;
         $data['groups'] = $this->groupsInvoice($factura);
         $view = view('factura.pdfInvoice', $data)->render();
