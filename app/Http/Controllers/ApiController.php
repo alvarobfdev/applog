@@ -169,7 +169,7 @@ class ApiController extends Controller
 
         return $groups;
     }
-    
+
     function date_compare($a, $b)
     {
         $t1 = strtotime($a['feccal']);
