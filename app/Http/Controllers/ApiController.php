@@ -136,7 +136,7 @@ class ApiController extends Controller
 
             \Mail::send("emails.invoice", $data, function($message) use ($pdfPath, $cliente, $factura) {
 
-                $message->from("testlogival@gmail.com", "Test email");
+                $message->from("admon@logival.es", "Logival");
                 $message->to($cliente->email, $cliente->nomacc);
                 $message->subject("Emisión de factura ".$factura["id"]["serfac"]."/".$factura["id"]["ejefac"]."/".$factura["id"]["numfac"]);
                 $message->attach($pdfPath);
